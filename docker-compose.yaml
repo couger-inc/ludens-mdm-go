@@ -1,0 +1,120 @@
+services:
+  get-lambda-rie:
+    image: couger-inc/mdm-go-lambda-get:latest
+    build:
+      context: .
+      args:
+        - BUILD_DIR=user-store/get
+        - HANDLER=main.go
+    container_name: get-lambda-rie
+    platform: linux/amd64
+    volumes:
+      - ~/.aws-lambda-rie:/aws-lambda
+    ports:
+      - "9000:8080"
+    entrypoint: ["/aws-lambda/aws-lambda-rie"]
+    command: ["./main"]
+    env_file: ".env"
+    networks:
+      - container-link
+    deploy:
+      resources:
+        limits:
+          # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
+          memory: 4096M
+  put-lambda-rie:
+    image: couger-inc/mdm-go-lambda-put:latest
+    build:
+      context: .
+      args:
+        - BUILD_DIR=user-store/put
+        - HANDLER=main.go
+    container_name: put-lambda-rie
+    platform: linux/amd64
+    volumes:
+      - ~/.aws-lambda-rie:/aws-lambda
+    ports:
+      - "9000:8080"
+    entrypoint: ["/aws-lambda/aws-lambda-rie"]
+    command: ["./main"]
+    env_file: ".env"
+    networks:
+      - container-link
+    deploy:
+      resources:
+        limits:
+          # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
+          memory: 4096M
+  patch-lambda-rie:
+    image: couger-inc/mdm-go-lambda-patch:latest
+    build:
+      context: .
+      args:
+        - BUILD_DIR=user-store/patch
+        - HANDLER=main.go
+    container_name: patch-lambda-rie
+    platform: linux/amd64
+    volumes:
+      - ~/.aws-lambda-rie:/aws-lambda
+    ports:
+      - "9000:8080"
+    entrypoint: ["/aws-lambda/aws-lambda-rie"]
+    command: ["./main"]
+    env_file: ".env"
+    networks:
+      - container-link
+    deploy:
+      resources:
+        limits:
+          # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
+          memory: 4096M
+  delete-lambda-rie:
+    image: couger-inc/mdm-go-lambda-delete:latest
+    build:
+      context: .
+      args:
+        - BUILD_DIR=user-store/delete
+        - HANDLER=main.go
+    container_name: delete-lambda-rie
+    platform: linux/amd64
+    volumes:
+      - ~/.aws-lambda-rie:/aws-lambda
+    ports:
+      - "9000:8080"
+    entrypoint: ["/aws-lambda/aws-lambda-rie"]
+    command: ["./main"]
+    env_file: ".env"
+    networks:
+      - container-link
+    deploy:
+      resources:
+        limits:
+          # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
+          memory: 4096M
+  manager-get-lambda-rie:
+    image: couger-inc/mdm-manager-go-lambda-get:latest
+    build:
+      context: .
+      args:
+        - BUILD_DIR=manager/get
+        - HANDLER=main.go
+    container_name: manager-get-lambda-rie
+    platform: linux/amd64
+    volumes:
+      - ~/.aws-lambda-rie:/aws-lambda
+    ports:
+      - "9000:8080"
+    entrypoint: ["/aws-lambda/aws-lambda-rie"]
+    command: ["./main"]
+    env_file: ".env"
+    networks:
+      - container-link
+    deploy:
+      resources:
+        limits:
+          # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
+          memory: 4096M
+networks:
+  container-link:
+    name: ludens-network # ludens-user-console と共通のネットワーク
+    external: true

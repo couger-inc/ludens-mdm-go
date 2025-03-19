@@ -1,0 +1,1526 @@
+openapi: 3.0.3
+info:
+  title: ludens-mdm
+  version: 1.0.0
+  description: 管理用 API
+servers:
+  - url: https://mdm-backend.couger-dev.ludens.to
+    description: couger-dev Server
+  - url: https://mdm-backend.egnaro-stg.ludens.to
+    description: autobacs-stg Server
+  - url: https://mdm-backend.localhost.couger-dev.ludens.to:3101
+    description: Local Server
+tags:
+  - name: misc
+    description: 運用のためのAPI
+  - name: accessKeys
+    description: アクセスキー
+  - name: imports
+    description: データのインポート
+  - name: stores
+    description: 店舗データ
+  - name: holidays
+    description: 祝日データ
+  - name: products
+    description: 商品データ
+  - name: categories
+    description: カテゴリーデータ
+  - name: categoryGroups
+    description: カテゴリーグループデータ
+paths:
+  /healthcheck:
+    get:
+      tags:
+        - misc
+      summary: ヘルスチェック
+      description: ヘルスチェック
+      operationId: healthcheck
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /accessKeys:
+    get:
+      tags:
+        - accessKeys
+      summary: アクセスキー一覧を取得
+      description: アクセスキー一覧を取得
+      operationId: getAccessKeys
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccessKey'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+  /imports:
+    get:
+      tags:
+        - imports
+      summary: インポート状況一覧
+      description: インポート状況一覧
+      operationId: getImports
+      parameters:
+        - name: resourceType
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceType'
+        - name: offset
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetImportsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+    post:
+      tags:
+        - imports
+      summary: インポートするデータをアップロード
+      description: インポートするデータをアップロード
+      operationId: uploadFile
+      parameters:
+        - name: resourceType
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceType'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileUpload'
+      responses:
+        '201':
+          description: Successful request
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+  /stores:
+    get:
+      tags:
+        - stores
+      summary: 店舗データ一覧
+      description: 店舗データ一覧
+      operationId: getStores
+      parameters:
+        - name: q
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+        - name: email
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - id
+              - name
+            default: id
+        - name: order
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum: [asc, desc, '']
+            default: asc
+        - name: offset
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            default: "0"
+        - name: limit
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            default: "100"
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStoresResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+  /stores/sales:
+    get:
+      tags:
+        - stores,sales
+      summary: 店舗売場面積データ一覧
+      description: 店舗売場面積データ一覧
+      operationId: getStoresSales
+      parameters:
+        - name: id
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+        - name: name
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - id
+              - name
+              - salesFloorArea
+            default: id
+        - name: order
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum: [asc, desc, '']
+            default: asc
+        - name: offset
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStoresSalesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+  /stores/sales/csv:
+    get:
+      tags:
+        - stores,sales
+      summary: 店舗売場面積一覧 CSV を取得する.
+      description: 店舗売場面積データ一覧
+      operationId: getStoresSalesCsv
+      responses:
+        "200":
+          $ref: "#/components/responses/Csv"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+  /managers:
+    get:
+        tags:
+          - manager
+        summary: 店舗一覧
+        description: 店舗一覧
+        operationId: getManagersAndStores
+        parameters:
+          - name: offset
+            in: query
+            required: false
+            allowEmptyValue: true
+            schema:
+              type: string
+              default: "0"
+          - name: limit
+            in: query
+            required: false
+            allowEmptyValue: true
+            schema:
+              type: string
+              default: "100"
+          - name: storeId
+            in: query
+            required: false
+            allowEmptyValue: true
+            schema:
+              type: string
+              maxLength: 16
+          - name: storeName
+            in: query
+            required: false
+            allowEmptyValue: true
+            schema:
+              type: string
+              maxLength: 64
+          - name: managerName
+            in: query
+            required: false
+            allowEmptyValue: true
+            schema:
+              type: string
+              maxLength: 255
+          - name: managerEmail
+            in: query
+            required: false
+            allowEmptyValue: true
+            schema:
+              type: string
+              maxLength: 255
+        responses:
+          '200':
+            description: Successful request
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/GetManagersResponse'
+          '400':
+            $ref: '#/components/responses/BadRequest'
+          '401':
+            $ref: '#/components/responses/Unauthorized'
+          '403':
+            $ref: '#/components/responses/Forbidden'
+          '500':
+            $ref: '#/components/responses/InternalServerError'
+        security:
+          - firebaseCookieAuth: []
+          - bearerAuth: []
+          - apiKeyAuth: []
+          - accessKeyBearerAuth: []
+  /managers/{storeId}:
+    get:
+      tags:
+        - manager
+      summary: 店舗の担当者一覧
+      description: 店舗の担当者一覧
+      operationId: getManagers
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            default: "0"
+        - name: limit
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            default: "100"
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 16
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetManagersForStoreResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+    put:
+      tags:
+        - manager
+      summary: 店舗の担当者作成
+      description: 店舗の担当者作成
+      operationId: createManagers
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 16
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                managers:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ManagerObject'
+                  maxLength: 100
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateManagersResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+    delete:
+      tags:
+        - manager
+      summary: 店舗の担当者削除
+      description: 店舗の担当者削除
+      operationId: deleteManagers
+      parameters:
+        - name: storeId
+          in: path
+          required: true
+          schema:
+            type: string
+            maxLength: 16
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                managers:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ManagerObject'
+                  maxLength: 100
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteManagersResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+  /holidays:
+    get:
+      tags:
+        - holidays
+      summary: 祝日データ一覧
+      description: 祝日データ一覧
+      operationId: getHolidays
+      parameters:
+        - name: from
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetHolidaysResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+  /products:
+    get:
+      tags:
+        - products
+      summary: 商品データ一覧
+      description: 商品データ一覧
+      operationId: getProducts
+      parameters:
+        - name: q
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum:
+              - id
+              - name
+            default: id
+        - name: order
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            enum: [asc, desc, '']
+            default: asc
+        - name: offset
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProductsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+  /categories:
+    get:
+      tags:
+        - categories
+      summary: カテゴリーデータ一覧
+      description: カテゴリーデータ一覧
+      operationId: getCategories
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCategoriesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+    post:
+      tags:
+        - categories
+      summary: カテゴリーデータ作成
+      description: カテゴリーデータ作成
+      operationId: createCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+    delete:
+      tags:
+        - categories
+      summary: カテゴリーデータ削除.
+      description: カテゴリーデータ削除.
+      operationId: deleteCategory
+      parameters:
+        - name: categoryId1
+          in: query
+          required: true
+          allowEmptyValue: true
+          schema:
+            type: string
+            default: ''
+        - name: categoryId2
+          in: query
+          required: true
+          allowEmptyValue: true
+          schema:
+            type: string
+            default: ''
+        - name: categoryId3
+          in: query
+          required: true
+          allowEmptyValue: true
+          schema:
+            type: string
+            default: ''
+        - name: categoryId4
+          in: query
+          required: true
+          allowEmptyValue: true
+          schema:
+            type: string
+            default: ''
+        - name: categoryId5
+          in: query
+          required: true
+          allowEmptyValue: true
+          schema:
+            type: string
+            default: ''
+      responses:
+        '200':
+          description: Successful request
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+  /categories/tree:
+    get:
+      tags:
+        - categories
+      summary: カテゴリーデータツリー構造としての一覧
+      description: カテゴリーデータツリー構造としての一覧
+      operationId: getCategoriesAsTree
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCategoriesAsTreeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+  /category-group:
+    get:
+      tags:
+        - category-group
+      summary: カテゴリーグループデータ一覧
+      description: カテゴリーグループデータ一覧
+      operationId: getCategoryGroups
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 100
+        - name: name
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: string
+            maxLength: 50
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCategoryGroupsResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+  /category-group/{id}:
+    get:
+      tags:
+        - category-group
+      summary: カテゴリーグループデータ
+      description: カテゴリーグループデータ
+      operationId: getCategoryGroup
+      parameters:
+        - name: id
+          in: path
+          required: true
+          allowEmptyValue: false
+          description: category group id
+          schema:
+            type: string
+            maxLength: 50
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCategoryGroupResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+    patch:
+      tags:
+        - category-group
+      summary: カテゴリーグループデータ update
+      description: カテゴリーグループデータ update
+      operationId: updateCategoryGroup
+      parameters:
+        - name: id
+          in: path
+          required: true
+          allowEmptyValue: false
+          description: category group id
+          schema:
+            type: string
+            maxLength: 50
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryGroupUpdate'
+      responses:
+        '201':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCategoryGroupResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+  /category-group-category/{id}:
+    get:
+      tags:
+        - category-group-category
+      summary: カテゴリーグループカテゴリーIDでのデータ一覧
+      description: カテゴリーグループカテゴリーIDでのデータ一覧
+      operationId: getCategoryGroupCategoriesByGroupId
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+            default: 100
+        - name: level
+          in: query
+          required: false
+          allowEmptyValue: true
+          schema:
+            type: integer
+        - name: id
+          in: path
+          required: true
+          allowEmptyValue: false
+          description: category group id
+          schema:
+            type: string
+            maxLength: 50
+      responses:
+        '200':
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCategoryGroupCategoriesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - firebaseCookieAuth: []
+        - bearerAuth: []
+        - apiKeyAuth: []
+        - accessKeyBearerAuth: []
+components:
+  securitySchemes:
+    firebaseCookieAuth:
+      type: apiKey
+      in: cookie
+      name: session
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    apiKeyAuth:
+      type: apiKey
+      in: query
+      name: idToken
+      description: 認証用トークンをクエリパラメターとして送信
+    accessKeyBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: AccessKey
+  responses:
+    Found:
+      description: Found
+      headers:
+        Location:
+          schema:
+            type: string
+            format: uri
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: NotFound request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Csv:
+      description: CSV レスポンス
+      content:
+        text/csv:
+          schema:
+            type: string
+            format: binary
+  schemas:
+    Error:
+      type: object
+    AccessKey:
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - name
+        - value
+        - updatedAt
+    ResourceType:
+      description: インポート対象
+      type: string
+      enum:
+        - stores
+        - userstores
+        - holidays
+        - products
+        - categories
+        - storeStatuses
+    ImportStatus:
+      description: インポート状況
+      type: string
+      enum:
+        - waiting
+        - processing
+        - finished
+        - failed
+        - canceled
+    Import:
+      description: インポート処理の状態
+      type: object
+      properties:
+        id:
+          type: integer
+        status:
+          $ref: '#/components/schemas/ImportStatus'
+        output:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - status
+        - createdAt
+        - updatedAt
+    GetImportsResponse:
+      type: object
+      properties:
+        imports:
+          type: array
+          items:
+            $ref: '#/components/schemas/Import'
+        totalCount:
+          type: integer
+      required:
+        - imports
+        - totalCount
+    FileUpload:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+    Store:
+      description: 店舗データ
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    GetStoresResponse:
+      type: object
+      properties:
+        stores:
+          type: array
+          items:
+            $ref: '#/components/schemas/Store'
+        totalCount:
+          type: integer
+      required:
+        - stores
+        - totalCount
+    StoreSales:
+      description: 店舗売り場面積データ
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        salesFloorArea:
+          type: number
+    GetStoresSalesResponse:
+      type: object
+      properties:
+        stores:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoreSales'
+        totalCount:
+          type: integer
+      required:
+        - stores
+        - totalCount
+    GetManagersResponse:
+      type: object
+      properties:
+        stores:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoreObject'
+        totalCount:
+          type: integer
+      required:
+        - stores
+        - totalCount
+    GetManagersForStoreResponse:
+      type: object
+      properties:
+        managers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ManagerObject'
+        totalCount:
+          type: integer
+      required:
+        - managers
+        - totalCount
+    StoreObject:
+      description: 店舗のオブジェクト
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 64
+        id:
+          type: string
+          maxLength: 16
+        lastUpdatedOn:
+          description: 更新日時
+          type: string
+          format: date
+        managers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ManagerObject'
+      required:
+        - name
+        - email
+    ManagerObject:
+      description: 担当者のオブジェクト
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          maxLength: 255
+      required:
+        - name
+        - email
+    CreateManagersResponse:
+      type: object
+      properties:
+        managers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ManagerObject'
+      required:
+        - managers
+    DeleteManagersResponse:
+      type: object
+      properties:
+        managers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ManagerObject'
+      required:
+        - managers
+    Holiday:
+      description: 祝日データ
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        name:
+          type: string
+    GetHolidaysResponse:
+      type: object
+      properties:
+        holidays:
+          type: array
+          items:
+            $ref: '#/components/schemas/Holiday'
+        totalCount:
+          type: integer
+      required:
+        - holidays
+        - totalCount
+    Product:
+      description: 商品データ
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        categoryId1:
+          type: string
+        categoryId2:
+          type: string
+        categoryId3:
+          type: string
+        categoryId4:
+          type: string
+        categoryId5:
+          type: string
+        price:
+          type: integer
+          nullable: true
+        note:
+          type: string
+      required:
+        - id
+        - name
+        - categoryId1
+        - categoryId2
+        - categoryId3
+        - categoryId4
+        - categoryId5
+        - price
+        - note
+    GetProductsResponse:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        totalCount:
+          type: integer
+      required:
+        - products
+        - totalCount
+    Category:
+      description: カテゴリーデータ
+      type: object
+      properties:
+        categoryId1:
+          type: string
+        categoryName1:
+          type: string
+        categoryId2:
+          type: string
+        categoryName2:
+          type: string
+        categoryId3:
+          type: string
+        categoryName3:
+          type: string
+        categoryId4:
+          type: string
+        categoryName4:
+          type: string
+        categoryId5:
+          type: string
+        categoryName5:
+          type: string
+      required:
+        - categoryId1
+        - categoryName1
+        - categoryId2
+        - categoryName2
+        - categoryId3
+        - categoryName3
+        - categoryId4
+        - categoryName4
+        - categoryId5
+        - categoryName5
+    CategoryTree:
+      description: カテゴリーツリーデータ
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryTree'
+      required:
+        - id
+        - name
+        - categories
+    CategoryGroup:
+      description: カテゴリーグループデータ
+      type: object
+      properties:
+        id:
+          type: string
+          maxLength: 50
+        name:
+          type: string
+          maxLength: 50
+        level:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - level
+    CategoryGroupCategory:
+      description: カテゴリーグループカテゴリーデータ
+      type: object
+      properties:
+        categoryGroupId:
+          type: string
+          nullable: true
+          maxLength: 50
+        categoryId1:
+          type: string
+          maxLength: 50
+        categoryId2:
+          type: string
+          maxLength: 50
+        categoryId3:
+          type: string
+          maxLength: 50
+        categoryId4:
+          type: string
+          maxLength: 50
+        categoryId5:
+          type: string
+          maxLength: 50
+        categoryName1:
+          type: string
+          maxLength: 100
+        categoryName2:
+          type: string
+          maxLength: 100
+        categoryName3:
+          type: string
+          maxLength: 100
+        categoryName4:
+          type: string
+          maxLength: 100
+        categoryName5:
+          type: string
+          maxLength: 100
+      required:
+        - categoryGroupId
+        - categoryId1
+        - categoryId2
+        - categoryId3
+        - categoryId4
+        - categoryId5
+        - categoryName1
+        - categoryName2
+        - categoryName3
+        - categoryName4
+        - categoryName5
+    CategoryGroupUpdate:
+      description: カテゴリーグループデータ update
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 50
+        level:
+          type: number
+      required:
+        - name
+        - level
+    GetCategoriesResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+        totalCount:
+          type: integer
+      required:
+        - categories
+        - totalCount
+    GetCategoriesAsTreeResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryTree'
+        totalCount:
+          type: integer
+      required:
+        - categories
+        - totalCount
+    GetCategoryGroupsResponse:
+      type: object
+      properties:
+        categoryGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryGroup'
+        totalCount:
+          type: integer
+      required:
+        - categoryGroups
+        - totalCount
+    GetCategoryGroupResponse:
+      type: object
+      properties:
+        categoryGroup:
+          $ref: '#/components/schemas/CategoryGroup'
+      required:
+        - categoryGroup
+    UpdateCategoryGroupResponse:
+      type: object
+      properties:
+        categoryGroup:
+          $ref: '#/components/schemas/CategoryGroup'
+      required:
+        - categoryGroup
+    GetCategoryGroupCategoriesResponse:
+      type: object
+      properties:
+        categoryGroupCategories:
+          type: array
+          items:
+            $ref: '#/components/schemas/CategoryGroupCategory'
+        totalCount:
+          type: integer
+      required:
+        - categoryGroupCategories
+        - totalCount

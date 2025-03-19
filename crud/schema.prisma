@@ -1,0 +1,132 @@
+generator db {
+  provider        = "go run github.com/steebchen/prisma-client-go"
+  previewFeatures = ["relationJoins"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  uid       String    @id @db.VarChar(255)
+  role      String?   @db.VarChar(20)
+  name      String    @default("") @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  synchedAt DateTime?
+  deletedAt DateTime?
+}
+
+model AccessKey {
+  name      String   @id @db.VarChar(20)
+  value     String   @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Import {
+  id           Int      @id @default(autoincrement()) @db.UnsignedInt
+  resourceType String   @db.VarChar(100)
+  status       String   @db.VarChar(20)
+  output       String?  @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+  objectKey    String   @db.VarChar(255)
+}
+
+model Product {
+  id          String   @id @db.VarChar(128)
+  name        String   @db.VarChar(200)
+  categoryId1 String   @default("") @db.VarChar(30)
+  categoryId2 String   @default("") @db.VarChar(30)
+  categoryId3 String   @default("") @db.VarChar(30)
+  categoryId4 String   @default("") @db.VarChar(30)
+  categoryId5 String   @default("") @db.VarChar(30)
+  note        String   @default("") @db.VarChar(1020)
+  price       Int?     @db.UnsignedInt
+  custom1     String   @default("") @db.VarChar(100)
+  custom2     String   @default("") @db.VarChar(100)
+  description String   @default("") @db.VarChar(255)
+  details     String   @default("") @db.VarChar(1000)
+  imageUrl1   String   @default("") @db.VarChar(255)
+  imageUrl2   String   @default("") @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
+
+model Category {
+  categoryId1             String                  @default("") @db.VarChar(50)
+  categoryName1           String                  @default("") @db.VarChar(100)
+  categoryId2             String                  @default("") @db.VarChar(50)
+  categoryName2           String                  @default("") @db.VarChar(100)
+  categoryId3             String                  @default("") @db.VarChar(50)
+  categoryName3           String                  @default("") @db.VarChar(100)
+  categoryId4             String                  @default("") @db.VarChar(50)
+  categoryName4           String                  @default("") @db.VarChar(100)
+  categoryId5             String                  @default("") @db.VarChar(50)
+  categoryName5           String                  @default("") @db.VarChar(100)
+  categoryGroupCategories CategoryGroupCategory[]
+
+  @@unique([categoryId1, categoryId2, categoryId3, categoryId4, categoryId5])
+}
+
+model CategoryGroup {
+  id                      String                  @id @db.VarChar(50)
+  name                    String                  @db.VarChar(50)
+  level                   Int                     @db.UnsignedInt
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @default(now())
+  categoryGroupCategories CategoryGroupCategory[]
+}
+
+model CategoryGroupCategory {
+  categoryId1     String        @default("") @db.VarChar(50)
+  categoryId2     String        @default("") @db.VarChar(50)
+  categoryId3     String        @default("") @db.VarChar(50)
+  categoryId4     String        @default("") @db.VarChar(50)
+  categoryId5     String        @default("") @db.VarChar(50)
+  categoryGroupId String        @db.VarChar(50)
+  category        Category      @relation(fields: [categoryId1, categoryId2, categoryId3, categoryId4, categoryId5], references: [categoryId1, categoryId2, categoryId3, categoryId4, categoryId5])
+  categoryGroup   CategoryGroup @relation(fields: [categoryGroupId], references: [id])
+
+  @@unique([categoryId1, categoryId2, categoryId3, categoryId4, categoryId5, categoryGroupId])
+}
+
+model Store {
+  id        String   @id @db.VarChar(16)
+  name      String   @db.VarChar(64)
+  salesFloorArea Float?    @db.Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  userStore     UserStore[]
+}
+
+model UserStore {
+  email     String   @db.VarChar(255)
+  name      String   @db.VarChar(255)
+  storeId   String   @db.VarChar(16)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  store     Store    @relation(fields: [storeId], references: [id])
+
+  @@unique([email, storeId])
+}
+
+model Holiday {
+  date DateTime @id @db.Date
+  name String   @db.VarChar(255)
+}
+
+model StoreStatus {
+  storeId    String   @db.VarChar(16)
+  date       DateTime @db.Date
+  isOpen     Boolean  @default(false)
+  isExisting Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  @@id([storeId, date])
+}
