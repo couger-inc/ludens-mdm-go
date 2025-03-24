@@ -92,7 +92,7 @@ jobs:
         REPOSITORY: ${{ vars.ECR_REPO_NAME }}
         IMAGE_TAG: ${{ env.version }}
         LAMBDA_FUNCTION_NAME: ${{ vars.LAMBDA_FUNCTION_NAME }}
-        LAMBDA_BUILD_NAME: ${{ github.event.inputs.env }}
+        LAMBDA_BUILD_NAME: ${{ github.event.inputs.lambda-name }}
       run: |
         # Build a docker container and
         # push it to ECR so that it can
