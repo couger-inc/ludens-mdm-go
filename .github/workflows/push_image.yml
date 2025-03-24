@@ -97,7 +97,7 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+        docker build --build-arg="BUILD_DIR=user-store/get" --build-arg="HANDLER=main.go" -t $REGISTRY/$LAMBDA_BUILD_NAME:$IMAGE_TAG .
+        docker push $REGISTRY/$LAMBDA_BUILD_NAME:$IMAGE_TAG
+        echo "image=$ECR_REGISTRY/$LAMBDA_BUILD_NAME:$IMAGE_TAG" >> $GITHUB_OUTPUT
         aws lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --image-uri $REGISTRY/$REPOSITORY:$IMAGE_TAG
