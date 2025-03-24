@@ -1,4 +1,17 @@
-FROM couger-inc/mdm-go-lambda-base as builder
+FROM golang:1.24 AS crud
+WORKDIR /app
+ARG BUILD_DIR
+ARG HANDLER
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y nodejs \
+    npm                       # note this one
+RUN npm install -g @prisma/client
+# Copy dependencies list
+COPY ./crud ./crud
+
+RUN (cd ./crud && go run github.com/steebchen/prisma-client-go generate)
+WORKDIR /app
+FROM crud AS builder
 ARG BUILD_DIR
 ARG HANDLER
 # Build with optional lambda.norpc tag

@@ -1,0 +1,62 @@
+name: Push Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'デプロイ対象環境'
+        type: environment
+        required: true
+
+jobs:
+  build-and-push-image-to-ecr:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        go: ["1.24"]
+
+    permissions:
+      id-token: write
+      contents: read
+
+    runs-on: ${{ matrix.os }}
+    environment: ${{ github.event.inputs.env }}
+    
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APPLICATION_ID }}
+          private-key: ${{ secrets.GH_APPLICATION_KEY }}
+          owner: ${{ github.repository_owner }}
+      
+      - name: show region
+        run: |
+          echo ${{ vars.AWS_REGION }}
+
+      - name: show ECR_REPO_NAME
+        run: |
+          echo ${{ vars.ECR_REPO_NAME }}
+          
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.TERRAFORM_ADMIN_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: ${{ vars.ECR_REPO_NAME }}
+          IMAGE_TAG: ${{ env.version }}
+          LAMBDA_FUNCTION_NAME: ${{ vars.LAMBDA_FUNCTION_NAME }}
+        run: |
+          docker build --build-arg="GITHUB_APP_TOKEN=${{ steps.app-token.outputs.token }}" -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
