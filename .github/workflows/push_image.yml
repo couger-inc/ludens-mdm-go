@@ -58,5 +58,5 @@ jobs:
           IMAGE_TAG: ${{ env.version }}
           LAMBDA_FUNCTION_NAME: ${{ vars.LAMBDA_FUNCTION_NAME }}
         run: |
-          docker build --build-arg="GITHUB_APP_TOKEN=${{ steps.app-token.outputs.token }}" -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker compose build --build-arg="GITHUB_APP_TOKEN=${{ steps.app-token.outputs.token }}" -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG

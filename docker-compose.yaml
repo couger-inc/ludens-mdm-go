@@ -1,6 +1,6 @@
 services:
   get-lambda-rie:
-    image: couger-inc/mdm-go-lambda-get:latest
+    image: couger-inc/ludens-mdm-backend/stores/manager/get:latest
     build:
       context: .
       args:
@@ -23,7 +23,7 @@ services:
           # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
           memory: 4096M
   put-lambda-rie:
-    image: couger-inc/mdm-go-lambda-put:latest
+    image: couger-inc/ludens-mdm-backend/stores/manager/put:latest
     build:
       context: .
       args:
@@ -46,7 +46,7 @@ services:
           # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
           memory: 4096M
   delete-lambda-rie:
-    image: couger-inc/mdm-go-lambda-delete:latest
+    image: couger-inc/ludens-mdm-backend/stores/manager/delete:latest
     build:
       context: .
       args:
@@ -69,7 +69,7 @@ services:
           # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
           memory: 4096M
   manager-get-lambda-rie:
-    image: couger-inc/mdm-manager-go-lambda-get:latest
+    image: couger-inc/ludens-mdm-backend/stores/get:latest
     build:
       context: .
       args:
