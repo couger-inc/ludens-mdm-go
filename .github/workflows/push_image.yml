@@ -67,13 +67,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - uses: actions/create-github-app-token@v1
-      id: app-token
-      with:
-        app-id: ${{ vars.GH_APPLICATION_ID }}
-        private-key: ${{ secrets.GH_APPLICATION_KEY }}
-        owner: ${{ github.repository_owner }}
-
     - name: show region
       run: |
         echo ${{ vars.AWS_REGION }}
@@ -104,7 +97,7 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build --build-arg="GITHUB_APP_TOKEN=${{ steps.app-token.outputs.token }}" -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
         aws lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --image-uri $REGISTRY/$REPOSITORY:$IMAGE_TAG
