@@ -1,5 +1,5 @@
 services:
-  get-lambda-rie:
+  stores-manager-get-lambda:
     image: couger-inc/ludens-mdm-backend/stores/manager/get:latest
     build:
       context: .
@@ -22,7 +22,7 @@ services:
         limits:
           # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
           memory: 4096M
-  put-lambda-rie:
+  stores-manager-put-lambda:
     image: couger-inc/ludens-mdm-backend/stores/manager/put:latest
     build:
       context: .
@@ -45,7 +45,7 @@ services:
         limits:
           # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
           memory: 4096M
-  delete-lambda-rie:
+  stores-manager-delete-lambda:
     image: couger-inc/ludens-mdm-backend/stores/manager/delete:latest
     build:
       context: .
@@ -68,7 +68,7 @@ services:
         limits:
           # If you experience any errors such as Chrome crashing or not being available you might need to increase the storage available to your Lambda Function.
           memory: 4096M
-  manager-get-lambda-rie:
+  stores-get-lambda:
     image: couger-inc/ludens-mdm-backend/stores/get:latest
     build:
       context: .

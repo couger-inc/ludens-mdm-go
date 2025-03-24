@@ -7,6 +7,15 @@ on:
         description: 'デプロイ対象環境'
         type: environment
         required: true
+      lambda-name:
+        description: 'Lambda'
+        required: true
+        type: choice
+        options:
+          - manager-get-lambda
+          - stores-manager-get-lambda
+          - stores-manager-put-lambda
+          - stores-manager-delete-lambda
 
 jobs:
   build-and-push-image-to-ecr:
@@ -21,6 +30,8 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     environment: ${{ github.event.inputs.env }}
+    env:
+      AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
     
 
     steps:
@@ -57,6 +68,7 @@ jobs:
           REPOSITORY: ${{ vars.ECR_REPO_NAME }}
           IMAGE_TAG: ${{ env.version }}
           LAMBDA_FUNCTION_NAME: ${{ vars.LAMBDA_FUNCTION_NAME }}
+          LAMBDA_BUILD_NAME: ${{ github.event.inputs.env }}
         run: |
-          docker compose build --build-arg="GITHUB_APP_TOKEN=${{ steps.app-token.outputs.token }}" -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker compose build $LAMBDA_BUILD_NAME --build-arg="GITHUB_APP_TOKEN=${{ steps.app-token.outputs.token }}" -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
