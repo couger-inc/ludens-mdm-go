@@ -51,7 +51,7 @@ provider "aws" {
 }
 
 module "backend" {
-  source = "../../modules/backend"
+  source = "../../modules"
   providers = {
     aws           = aws
     aws.us-east-1 = aws.us-east-1
