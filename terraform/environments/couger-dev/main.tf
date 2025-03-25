@@ -118,25 +118,6 @@ module "backend" {
   bastion_instance_count = 1
 }
 
-module "frontend" {
-  source = "../../modules/frontend"
-  providers = {
-    aws           = aws
-    aws.us-east-1 = aws.us-east-1
-  }
-
-  app              = local.app
-  env              = local.env
-  frontend_bucket  = "${local.app}-${local.env}-frontend"
-  zone_name        = local.zone_name
-  domain_name      = "mdm.${local.zone_name}"
-  min_ttl          = 10
-  default_ttl      = 10
-  max_ttl          = 10
-  admin_web_acl_id = "arn:aws:wafv2:us-east-1:${local.account_id}:global/webacl/admin/${local.admin_web_acl_id}"
-  log_bucket       = module.backend.log_bucket
-}
-
 output "vpc" {
   value = module.backend.vpc
 }
