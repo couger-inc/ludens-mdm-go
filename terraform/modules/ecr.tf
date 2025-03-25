@@ -33,16 +33,58 @@ locals {
 EOF
 }
 
-resource "aws_ecr_repository" "get-stores-lambda" {
-  name = "${var.app}-get-stores-function"
+resource "aws_ecr_repository" "get-managers-lambda" {
+  name = "${var.app}-get-managers-lambda-function"
 
   image_scanning_configuration {
     scan_on_push = true
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "get-stores-lambda" {
-  repository = aws_ecr_repository.get-stores-lambda.name
+resource "aws_ecr_lifecycle_policy" "get-managers-lambda" {
+  repository = aws_ecr_repository.get-managers-lambda.name
+
+  policy = local.lifecycle_policy
+}
+
+resource "aws_ecr_repository" "get-store-managers-lambda" {
+  name = "${var.app}-get-store-managers-lambda-function"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
+resource "aws_ecr_lifecycle_policy" "get-store-managers-lambda" {
+  repository = aws_ecr_repository.get-store-managers-lambda.name
+
+  policy = local.lifecycle_policy
+}
+
+resource "aws_ecr_repository" "put-store-managers-lambda" {
+  name = "${var.app}-put-store-managers-lambda-function"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
+resource "aws_ecr_lifecycle_policy" "put-store-managers-lambda" {
+  repository = aws_ecr_repository.put-store-managers-lambda.name
+
+  policy = local.lifecycle_policy
+}
+
+resource "aws_ecr_repository" "delete-store-managers-lambda-lambda" {
+  name = "${var.app}-delete-store-managers-lambda-function"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
+resource "aws_ecr_lifecycle_policy" "delete-store-managers-lambda-lambda" {
+  repository = aws_ecr_repository.delete-store-managers-lambda.name
 
   policy = local.lifecycle_policy
 }
