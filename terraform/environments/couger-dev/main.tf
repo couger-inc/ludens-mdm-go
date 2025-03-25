@@ -57,4 +57,7 @@ module "backend" {
     aws.us-east-1 = aws.us-east-1
   }
 
+  app                        = local.app
+  env                        = local.env
+
 }
