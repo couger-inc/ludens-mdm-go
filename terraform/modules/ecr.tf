@@ -34,7 +34,7 @@ EOF
 }
 
 resource "aws_ecr_repository" "get-stores-lambda" {
-  name = "${var.app}-app-function"
+  name = "${var.app}-get-stores-function"
 
   image_scanning_configuration {
     scan_on_push = true
