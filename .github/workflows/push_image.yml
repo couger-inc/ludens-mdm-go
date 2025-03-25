@@ -92,7 +92,7 @@ jobs:
       id: build-image
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: ${{ vars.ECR_REPO_NAME }}
+        REPOSITORY: ${{ vars.ECR_REPOSITORY }}
         IMAGE_TAG: ${{ env.IMAGE_TAG }}
         LAMBDA_FUNCTION_NAME: ${{ vars.LAMBDA_FUNCTION_NAME }}
         LAMBDA_BUILD_NAME: ${{ github.event.inputs.lambda-name }}
