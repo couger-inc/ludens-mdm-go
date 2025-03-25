@@ -99,5 +99,7 @@ jobs:
         echo $ECR_REPOSITORY
         docker build --build-arg="BUILD_DIR=${LAMBDA_BUILD_FOLDER_NAME}" --build-arg="HANDLER=main.go" -t $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        docker tag $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $REGISTRY/$ECR_REPOSITORY:latest
+        docker push $REGISTRY/$ECR_REPOSITORY:latest
         echo "image=$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
         # aws lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --image-uri $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
