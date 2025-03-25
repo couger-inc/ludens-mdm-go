@@ -11,6 +11,21 @@ terraform {
   }
 }
 
+import {
+  to = aws_vpc.test_vpc
+  id = "vpc-0094445a8abda30a8"
+}
+import {
+  to = aws_security_group.elb_sg
+  id = "sg-0665c31eafc1fe84b"
+}
+data "aws_subnets" "selected" {
+  filter {
+    name   = "tag:Name"
+    values = ["ludens-mdm"] # insert values here
+  }
+}
+
 locals {
   account_id       = "229484968889"
   app              = "ludens-mdm"
