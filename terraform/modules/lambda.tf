@@ -42,6 +42,10 @@ resource "aws_lambda_function" "get-managers-lambda-function" {
   environment {
     variables = {
       ENVIRONMENT = var.app
+      DB_USERNAME = var.db_username
+      DB_NAME = var.db_name
+      DB_PASSWORD = var.db_password
+      DB_PORT = var.db_port
     }
   }
 
@@ -62,6 +66,10 @@ resource "aws_lambda_function" "get-store-managers-lambda-function" {
   environment {
     variables = {
       ENVIRONMENT = var.app
+      DB_USERNAME = var.db_username
+      DB_NAME = var.db_name
+      DB_PASSWORD = var.db_password
+      DB_PORT = var.db_port
     }
   }
 
@@ -82,6 +90,10 @@ resource "aws_lambda_function" "put-store-managers-lambda-function" {
   environment {
     variables = {
       ENVIRONMENT = var.app
+      DB_USERNAME = var.db_username
+      DB_NAME = var.db_name
+      DB_PASSWORD = var.db_password
+      DB_PORT = var.db_port
     }
   }
 
@@ -102,6 +114,10 @@ resource "aws_lambda_function" "delete-store-managers-lambda-function" {
   environment {
     variables = {
       ENVIRONMENT = var.app
+      DB_USERNAME = var.db_username
+      DB_NAME = var.db_name
+      DB_PASSWORD = var.db_password
+      DB_PORT = var.db_port
     }
   }
 
