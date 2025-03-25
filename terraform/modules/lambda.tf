@@ -20,9 +20,6 @@ resource "aws_lambda_function" "get-managers-lambda-function" {
   environment {
     variables = {
       ENVIRONMENT = var.app
-      DB_USERNAME = var.db_username
-      DB_PASSWORD = var.db_password
-      DB_NAME     = db_name
     }
   }
 
