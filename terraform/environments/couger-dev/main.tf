@@ -12,11 +12,11 @@ terraform {
 }
 
 import {
-  to = aws_vpc.test_vpc
+  to = local.test_vpc
   id = "vpc-0094445a8abda30a8"
 }
 import {
-  to = aws_security_group.elb_sg
+  to = local.vpc_sg
   id = "sg-0665c31eafc1fe84b"
 }
 data "aws_subnets" "selected" {
@@ -74,5 +74,7 @@ module "backend" {
 
   app                        = local.app
   env                        = local.env
+  vpc_sg = local.vpc_sg
+
 
 }

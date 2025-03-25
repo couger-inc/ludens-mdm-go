@@ -25,7 +25,7 @@ resource "aws_lambda_function" "get-managers-lambda-function" {
 
   vpc_config {
     subnet_ids         = selected.ids
-    security_group_ids = [aws_security_group.elb_sg.id]
+    security_group_ids = [var.vpc_sg]
   }
 }
 
