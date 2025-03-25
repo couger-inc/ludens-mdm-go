@@ -60,4 +60,9 @@ module "backend" {
   app                        = local.app
   env                        = local.env
 
+  db_username                  = "app"
+  db_password                  = "rK6w2-mi99hxmaP,"
+  db_name                      = "ludens_mdm_couger_dev"
+  prisma_connection_parameters = "connection_limit=20&pool_timeout=10"
+
 }

@@ -1,3 +1,19 @@
+import {
+  to = aws_vpc.test_vpc
+  id = "vpc-0094445a8abda30a8"
+}
+import {
+  to = aws_security_group.elb_sg
+  id = "sg-0665c31eafc1fe84b"
+}
+data "aws_subnets" "selected" {
+  filter {
+    name   = "tag:Name"
+    values = ["ludens-mdm"] # insert values here
+  }
+}
+
+
 data "aws_iam_policy_document" "lambda_assume_role" {
   statement {
     effect  = "Allow"
@@ -20,7 +36,15 @@ resource "aws_lambda_function" "get-managers-lambda-function" {
   environment {
     variables = {
       ENVIRONMENT = var.app
+      DB_USERNAME = var.db_username
+      DB_PASSWORD = var.db_password
+      DB_NAME     = db_name
     }
+  }
+
+  vpc_config {
+    subnet_ids         = selected.ids
+    security_group_ids = [aws_security_group.elb_sg.id]
   }
 }
 
