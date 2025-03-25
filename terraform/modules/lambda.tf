@@ -22,7 +22,7 @@ data "aws_subnets" "public_subnets" {
 data "aws_security_groups" "test" {
   filter {
     name   = "group-name"
-    values = ["backend"]
+    values = ["lambda"]
   }
 
   filter {
@@ -41,6 +41,11 @@ data "aws_iam_policy_document" "lambda_assume_role" {
       identifiers = ["lambda.amazonaws.com"]
     }
   }
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_aws_lambda_vpc_access_execution_role" {
+  role       = aws_iam_role.get-managers-lambda-function-role.arn
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
 resource "aws_lambda_function" "get-managers-lambda-function" {
