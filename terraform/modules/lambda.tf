@@ -22,7 +22,7 @@ data "aws_subnets" "public_subnets" {
 data "aws_security_groups" "test" {
   filter {
     name   = "group-name"
-    values = ["ludens-mdm-backend"]
+    values = ["backend"]
   }
 
   filter {
