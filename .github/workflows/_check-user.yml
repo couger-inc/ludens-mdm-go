@@ -1,0 +1,34 @@
+name: _check-user
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        type: string
+        required: true
+      user:
+        type: string
+        required: true
+
+jobs:
+  check-user:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.env }}
+    env:
+      deploy_users: ${{ vars.DEPLOY_USERS }}
+      skip_check: ${{ inputs.env == vars.DEFAULT_ENV }}
+    steps:
+      - name: Get user
+        run: |
+          echo "環境: ${{ inputs.env }}"
+          echo "実行ユーザー名 ${{ inputs.user }}"
+          echo "デプロイ可能ユーザー ${{ env.deploy_users }}"
+      - name: Check user
+        id: checkUser
+        if: ${{ !env.skip_check && !contains(fromJson(env.deploy_users), inputs.user) }}
+        run: |
+          echo "${{ inputs.user }} は ${{ inputs.env }} 環境へのデプロイを許可されていません"
+          exit 1
+      - run: echo "デプロイを実行します"

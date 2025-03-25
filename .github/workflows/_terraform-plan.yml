@@ -1,0 +1,50 @@
+name: _terraform-plan
+
+on:
+  workflow_call:
+    inputs:
+      env:
+        type: string
+        required: true
+      dir:
+        type: string
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ap-northeast-1
+
+jobs:
+  terraform_plan:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.env }}
+    env:
+      AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+    defaults:
+      run:
+        working-directory: ./terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - id: get-terraform-version
+        run: |
+          TFVERSION_PATH="../.terraform-version"
+          TFVERSION=$(cat "$TFVERSION_PATH")
+          echo "TERRAFORM_VERSION=$TFVERSION" >> $GITHUB_OUTPUT
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ steps.get-terraform-version.outputs.TERRAFORM_VERSION }}
+      - name: terraform init
+        run: cd "environments/${{ inputs.dir }}" && terraform init
+      - name: terraform plan
+        run: |
+          cd "environments/${{ inputs.dir }}" && \
+            terraform plan -detailed-exitcode -out plan.out

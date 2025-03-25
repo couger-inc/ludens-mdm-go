@@ -1,0 +1,26 @@
+name: Terraform Apply
+run-name: terraform apply - ${{ inputs.env }} (${{ github.ref_name }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: '対象環境'
+        type: environment
+        required: true
+
+concurrency:
+  group: terraform-${{ inputs.env }}
+
+jobs:
+  check-user:
+    uses: ./.github/workflows/_check-user.yml
+    with:
+      env: ${{ inputs.env }}
+      user: ${{ github.triggering_actor }}
+  terraform_apply:
+    needs: check-user
+    uses: ./.github/workflows/_terraform-apply.yml
+    with:
+      env: ${{ inputs.env }}
+      dir: ${{ inputs.env }}
