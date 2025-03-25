@@ -64,6 +64,11 @@ resource "aws_lambda_function" "get-store-managers-lambda-function" {
       ENVIRONMENT = var.app
     }
   }
+
+  vpc_config {
+    subnet_ids         = data.aws_subnets.private_subnets.ids
+    security_group_ids = data.aws_security_groups.test.ids
+  }
 }
 
 resource "aws_lambda_function" "put-store-managers-lambda-function" {
@@ -79,6 +84,11 @@ resource "aws_lambda_function" "put-store-managers-lambda-function" {
       ENVIRONMENT = var.app
     }
   }
+
+  vpc_config {
+    subnet_ids         = data.aws_subnets.private_subnets.ids
+    security_group_ids = data.aws_security_groups.test.ids
+  }
 }
 
 resource "aws_lambda_function" "delete-store-managers-lambda-function" {
@@ -93,6 +103,11 @@ resource "aws_lambda_function" "delete-store-managers-lambda-function" {
     variables = {
       ENVIRONMENT = var.app
     }
+  }
+
+  vpc_config {
+    subnet_ids         = data.aws_subnets.private_subnets.ids
+    security_group_ids = data.aws_security_groups.test.ids
   }
 }
 
