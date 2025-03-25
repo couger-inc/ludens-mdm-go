@@ -31,23 +31,6 @@ data "aws_security_groups" "test" {
   }
 }
 
-
-data "aws_iam_policy_document" "lambda_assume_role" {
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["lambda.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_aws_lambda_vpc_access_execution_role" {
-  role       = aws_iam_role.get-managers-lambda-function-role.arn
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-}
-
 resource "aws_lambda_function" "get-managers-lambda-function" {
   function_name = "${var.app}-get-managers-lambda"
   timeout       = 5 # seconds
@@ -113,18 +96,38 @@ resource "aws_lambda_function" "delete-store-managers-lambda-function" {
   }
 }
 
-resource "aws_iam_role" "get-managers-lambda-function-role" {
-  name = "${var.app}-get-managers-lambda-function-role"
+data "aws_iam_policy_document" "lambda_assume_role" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
+}
 
-  assume_role_policy = jsonencode({
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-      },
-    ]
-  })
+resource "aws_iam_role" "get-managers-lambda-function-role" {
+    name = "${var.app}-get-managers-lambda-function-role"
+    assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_aws_lambda_basic_execution_role" {
+  role       = aws_iam_role.get-managers-lambda-function-role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_aws_lambda_vpc_access_execution_role" {
+  role       = aws_iam_role.get-managers-lambda-function-role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_aws_xray_write_only_access" {
+  role       = aws_iam_role.get-managers-lambda-function-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_amazon_ssm_read_only_access" {
+  role       = aws_iam_role.get-managers-lambda-function-role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMReadOnlyAccess"
 }
