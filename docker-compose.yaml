@@ -4,7 +4,7 @@ services:
     build:
       context: .
       args:
-        - BUILD_DIR=user-store/get
+        - BUILD_DIR=get-store-managers-lambda
         - HANDLER=main.go
     container_name: get-lambda-rie
     platform: linux/amd64
@@ -27,7 +27,7 @@ services:
     build:
       context: .
       args:
-        - BUILD_DIR=user-store/put
+        - BUILD_DIR=put-store-managers-lambda
         - HANDLER=main.go
     container_name: put-lambda-rie
     platform: linux/amd64
@@ -50,7 +50,7 @@ services:
     build:
       context: .
       args:
-        - BUILD_DIR=user-store/delete
+        - BUILD_DIR=delete-store-managers-lambda
         - HANDLER=main.go
     container_name: delete-lambda-rie
     platform: linux/amd64
@@ -73,7 +73,7 @@ services:
     build:
       context: .
       args:
-        - BUILD_DIR=manager/get
+        - BUILD_DIR=get-managers-lambda
         - HANDLER=main.go
     container_name: manager-get-lambda-rie
     platform: linux/amd64

@@ -20,10 +20,10 @@ require (
 	go.mongodb.org/mongo-driver/v2 v2.0.1 // indirect
 )
 
-replace github.com/couger-inc/ludens-mdm/crud => ../../crud
+replace github.com/couger-inc/ludens-mdm/crud => ../crud
 
-replace github.com/couger-inc/ludens-mdm/openapi => ../../openapi
+replace github.com/couger-inc/ludens-mdm/openapi => ../openapi
 
-replace github.com/couger-inc/ludens-mdm/middlewares => ../../middleware
+replace github.com/couger-inc/ludens-mdm/middlewares => ../middleware
 
-replace github.com/couger-inc/ludens-mdm/middlewares/auth => ../../middleware/auth
+replace github.com/couger-inc/ludens-mdm/middlewares/auth => ../middleware/auth
