@@ -24,6 +24,51 @@ resource "aws_lambda_function" "get-managers-lambda-function" {
   }
 }
 
+resource "aws_lambda_function" "get-store-managers-lambda-function" {
+  function_name = "${var.app}-get-store-managers-lambda"
+  timeout       = 5 # seconds
+  image_uri     = "${aws_ecr_repository.get-store-managers-lambda.repository_url}:latest"
+  package_type  = "Image"
+
+  role = aws_iam_role.get-managers-lambda-function-role.arn
+
+  environment {
+    variables = {
+      ENVIRONMENT = var.app
+    }
+  }
+}
+
+resource "aws_lambda_function" "put-store-managers-lambda-function" {
+  function_name = "${var.app}-put-store-managers-lambda"
+  timeout       = 5 # seconds
+  image_uri     = "${aws_ecr_repository.put-store-managers-lambda.repository_url}:latest"
+  package_type  = "Image"
+
+  role = aws_iam_role.get-managers-lambda-function-role.arn
+
+  environment {
+    variables = {
+      ENVIRONMENT = var.app
+    }
+  }
+}
+
+resource "aws_lambda_function" "delete-store-managers-lambda-function" {
+  function_name = "${var.app}-delete-store-managers-lambda"
+  timeout       = 5 # seconds
+  image_uri     = "${aws_ecr_repository.delete-store-managers-lambda.repository_url}:latest"
+  package_type  = "Image"
+
+  role = aws_iam_role.get-managers-lambda-function-role.arn
+
+  environment {
+    variables = {
+      ENVIRONMENT = var.app
+    }
+  }
+}
+
 resource "aws_iam_role" "get-managers-lambda-function-role" {
   name = "${var.app}-get-managers-lambda-function-role"
 
