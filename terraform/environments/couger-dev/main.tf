@@ -3,7 +3,7 @@
 terraform {
   backend "s3" {
     bucket = "couger-dev-terraform-states"
-    key    = "ludens-mdm-couger-dev.tfstate"
+    key    = "ludens-mdm-couger-dev-go.tfstate"
     region = "ap-northeast-1"
     assume_role = {
       role_arn = "arn:aws:iam::229484968889:role/TerraformRole"
