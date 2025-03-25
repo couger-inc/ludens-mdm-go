@@ -20,7 +20,6 @@ locals {
   zone_name        = "couger-dev.ludens.to"
   admin_web_acl_id = "c9b4f2e0-10ca-4e57-b8e7-b859128df73e"
   referer_value    = "3sw0FBt2NHXrQUzN0aVxZWqaym69uohi"
-  vpc_sg           = vpc_sg
 }
 
 
