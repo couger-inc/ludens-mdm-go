@@ -75,7 +75,7 @@ resource "aws_ecr_lifecycle_policy" "put-store-managers-lambda" {
   policy = local.lifecycle_policy
 }
 
-resource "aws_ecr_repository" "delete-store-managers-lambda-lambda" {
+resource "aws_ecr_repository" "delete-store-managers-lambda" {
   name = "${var.app}-delete-store-managers-lambda-function"
 
   image_scanning_configuration {
@@ -83,7 +83,7 @@ resource "aws_ecr_repository" "delete-store-managers-lambda-lambda" {
   }
 }
 
-resource "aws_ecr_lifecycle_policy" "delete-store-managers-lambda-lambda" {
+resource "aws_ecr_lifecycle_policy" "delete-store-managers-lambda" {
   repository = aws_ecr_repository.delete-store-managers-lambda.name
 
   policy = local.lifecycle_policy
