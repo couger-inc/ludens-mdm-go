@@ -11,20 +11,7 @@ terraform {
   }
 }
 
-import {
-  to = local.test_vpc
-  id = "vpc-0094445a8abda30a8"
-}
-import {
-  to = local.vpc_sg
-  id = "sg-0665c31eafc1fe84b"
-}
-data "aws_subnets" "selected" {
-  filter {
-    name   = "tag:Name"
-    values = ["ludens-mdm"] # insert values here
-  }
-}
+#  id = "sg-0665c31eafc1fe84b"
 
 locals {
   account_id       = "229484968889"
@@ -33,6 +20,7 @@ locals {
   zone_name        = "couger-dev.ludens.to"
   admin_web_acl_id = "c9b4f2e0-10ca-4e57-b8e7-b859128df73e"
   referer_value    = "3sw0FBt2NHXrQUzN0aVxZWqaym69uohi"
+  vpc_sg           = vpc_sg
 }
 
 
@@ -74,7 +62,5 @@ module "backend" {
 
   app                        = local.app
   env                        = local.env
-  vpc_sg = local.vpc_sg
-
 
 }

@@ -1,3 +1,41 @@
+data "aws_vpc" "vpc" {
+  filter {
+    name = "tag:Name"
+    values = ["vpc-0094445a8abda30a8"]
+  }
+}
+
+data "aws_subnet_ids" "private_subnets" {
+  vpc_id = data.aws_vpc.vpc.id
+
+  filter {
+    name = "tag:Name"
+    values = ["vpc-0094445a8abda30a8-private-*"]
+  }
+}
+
+data "aws_subnet_ids" "public_subnets" {
+  vpc_id = data.aws_vpc.vpc.id
+
+  filter {
+    name = "tag:Name"
+    values = ["vpc-0094445a8abda30a8-public-*"]
+  }
+}
+
+data "aws_security_groups" "test" {
+  filter {
+    name   = "group-name"
+    values = ["ludens-mdm-backend"]
+  }
+
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.vpc.id]
+  }
+}
+
+
 data "aws_iam_policy_document" "lambda_assume_role" {
   statement {
     effect  = "Allow"
@@ -24,8 +62,8 @@ resource "aws_lambda_function" "get-managers-lambda-function" {
   }
 
   vpc_config {
-    subnet_ids         = selected.ids
-    security_group_ids = [var.vpc_sg]
+    subnet_ids         = data.aws_subnet_ids.private_subnets.ids
+    security_group_ids = data.aws_security_groups.test
   }
 }
 
