@@ -37,3 +37,28 @@ variable "db_master_password" {
   description = "DB パスワード"
   type        = string
 }
+
+variable "identity_api_base_path" {
+  description = "Ludens User Console identity API ベースパス"
+  type        = string
+}
+
+variable "service" {
+  description = "サービス名 (Ludens User Console との通信用)"
+  type        = string
+}
+
+variable "service_kid" {
+  description = "サービス KID (Ludens User Console との通信用)"
+  type        = string
+}
+
+variable "service_key" {
+  description = "サービスキー (Ludens User Console との通信用)"
+  type        = string
+}
+
+variable "firebase_project_id" {
+  description = "Firebase Project ID"
+  type        = string
+}

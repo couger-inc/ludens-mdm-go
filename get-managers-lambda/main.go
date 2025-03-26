@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -39,6 +40,7 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, 
 	if err != nil {
 		return fmt.Sprintf("Unable to connect to the database: %v", err.Error()), 500
 	}
+	log.Println("Calling get Stores")
 	stores, totalCount, err := basics.GetStores(ctx, skip, take, *request.StoreId, *request.StoreName, *request.ManagerEmail, *request.ManagerName)
 	if err != nil {
 		return fmt.Sprintf("Unable to retrieve stores: %v", err.Error()), 500

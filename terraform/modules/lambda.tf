@@ -53,6 +53,11 @@ resource "aws_lambda_function" "get-managers-lambda-function" {
       DB_HOST = data.aws_rds_cluster.main.endpoint
       DB_PORT = var.db_port
       DB_NAME = var.db_name
+      IDENTITY_API_BASE_PATH = var.identity_api_base_path
+      SERVICE = var.service
+      SERVICE_KID = var.service_kid
+      SERVICE_KEY = var.service_key
+      FIREBASE_PROJECT_ID = var.firebase_project_id
     }
   }
 
@@ -80,6 +85,11 @@ resource "aws_lambda_function" "get-store-managers-lambda-function" {
       DB_HOST = data.aws_rds_cluster.main.endpoint
       DB_PORT = var.db_port
       DB_NAME = var.db_name
+      IDENTITY_API_BASE_PATH = var.identity_api_base_path
+      SERVICE = var.service
+      SERVICE_KID = var.service_kid
+      SERVICE_KEY = var.service_key
+      FIREBASE_PROJECT_ID = var.firebase_project_id
     }
   }
 
@@ -107,6 +117,11 @@ resource "aws_lambda_function" "put-store-managers-lambda-function" {
       DB_HOST = data.aws_rds_cluster.main.endpoint
       DB_PORT = var.db_port
       DB_NAME = var.db_name
+      IDENTITY_API_BASE_PATH = var.identity_api_base_path
+      SERVICE = var.service
+      SERVICE_KID = var.service_kid
+      SERVICE_KEY = var.service_key
+      FIREBASE_PROJECT_ID = var.firebase_project_id
     }
   }
 
@@ -134,6 +149,11 @@ resource "aws_lambda_function" "delete-store-managers-lambda-function" {
       DB_HOST = data.aws_rds_cluster.main.endpoint
       DB_PORT = var.db_port
       DB_NAME = var.db_name
+      IDENTITY_API_BASE_PATH = var.identity_api_base_path
+      SERVICE = var.service
+      SERVICE_KID = var.service_kid
+      SERVICE_KEY = var.service_key
+      FIREBASE_PROJECT_ID = var.firebase_project_id
     }
   }
 

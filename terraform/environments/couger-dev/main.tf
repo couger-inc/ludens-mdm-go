@@ -66,4 +66,10 @@ module "backend" {
   db_name                      = "ludens_mdm_couger_dev"
   db_master_username           = "root"
   db_master_password           = "8D#t2eb_P.XUYWL+"
+
+  identity_api_base_path     = "https://admin-backend.${local.zone_name}"
+  service                    = local.app
+  service_kid                = "key-1"
+  service_key                = "12345678901234567890123456789012"
+  firebase_project_id        = "ludens-couger-dev"
 }
