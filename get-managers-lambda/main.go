@@ -41,6 +41,10 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, 
 		return fmt.Sprintf("Unable to connect to the database: %v", err.Error()), 500
 	}
 	log.Println("Calling get Stores")
+	log.Println(basics == nil)
+	log.Println(basics)
+	log.Println(basics.PrismaClient == nil)
+	log.Println(basics.PrismaClient)
 	stores, totalCount, err := basics.GetStores(ctx, skip, take, *request.StoreId, *request.StoreName, *request.ManagerEmail, *request.ManagerName)
 	if err != nil {
 		return fmt.Sprintf("Unable to retrieve stores: %v", err.Error()), 500
