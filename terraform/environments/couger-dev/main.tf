@@ -64,4 +64,6 @@ module "backend" {
   db_username                  = "app"
   db_password                  = "rK6w2-mi99hxmaP,"
   db_name                      = "ludens_mdm_couger_dev"
+  db_master_username           = "root"
+  db_master_password           = "8D#t2eb_P.XUYWL+"
 }

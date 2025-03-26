@@ -28,3 +28,12 @@ variable "db_port" {
   type        = number
   default     = 3306
 }
+
+variable "db_master_username" {
+  description = "DB ユーザー名"
+  type        = string
+}
+variable "db_master_password" {
+  description = "DB パスワード"
+  type        = string
+}
