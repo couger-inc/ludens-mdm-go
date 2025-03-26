@@ -45,11 +45,14 @@ resource "aws_lambda_function" "get-managers-lambda-function" {
 
   environment {
     variables = {
-      ENVIRONMENT = var.app
+      DATABASE_URL = "mysql://${var.db_username}:${var.db_password}@${data.aws_rds_cluster.main.endpoint}:${var.db_port}/${var.db_name}"
+      DB_MASTER_USERNAME = var.db_master_username
+      DB_MASTER_PASSWORD = var.db_master_password
       DB_USERNAME = var.db_username
-      DB_NAME = var.db_name
       DB_PASSWORD = var.db_password
+      DB_HOST = data.aws_rds_cluster.main.endpoint
       DB_PORT = var.db_port
+      DB_NAME = var.db_name
     }
   }
 
@@ -69,11 +72,14 @@ resource "aws_lambda_function" "get-store-managers-lambda-function" {
 
   environment {
     variables = {
-      ENVIRONMENT = var.app
+      DATABASE_URL = "mysql://${var.db_username}:${var.db_password}@${data.aws_rds_cluster.main.endpoint}:${var.db_port}/${var.db_name}"
+      DB_MASTER_USERNAME = var.db_master_username
+      DB_MASTER_PASSWORD = var.db_master_password
       DB_USERNAME = var.db_username
-      DB_NAME = var.db_name
       DB_PASSWORD = var.db_password
+      DB_HOST = data.aws_rds_cluster.main.endpoint
       DB_PORT = var.db_port
+      DB_NAME = var.db_name
     }
   }
 
@@ -93,11 +99,14 @@ resource "aws_lambda_function" "put-store-managers-lambda-function" {
 
   environment {
     variables = {
-      ENVIRONMENT = var.app
+      DATABASE_URL = "mysql://${var.db_username}:${var.db_password}@${data.aws_rds_cluster.main.endpoint}:${var.db_port}/${var.db_name}"
+      DB_MASTER_USERNAME = var.db_master_username
+      DB_MASTER_PASSWORD = var.db_master_password
       DB_USERNAME = var.db_username
-      DB_NAME = var.db_name
       DB_PASSWORD = var.db_password
+      DB_HOST = data.aws_rds_cluster.main.endpoint
       DB_PORT = var.db_port
+      DB_NAME = var.db_name
     }
   }
 
