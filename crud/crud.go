@@ -3,7 +3,6 @@ package userStore
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/couger-inc/ludens-mdm/crud/db"
@@ -29,18 +28,14 @@ type Manager struct {
 
 func (basics *TableBasics) GetStores(ctx context.Context, offset int, limit int, storeId string, storeName string, managerEmail string, managerName string) ([]db.StoreModel, int, error) {
 	var res []map[string]string
-	log.Println("Executing count query")
 	err := basics.PrismaClient.Prisma.QueryRaw(fmt.Sprintf("SELECT COUNT(*) FROM `UserStore` where email LIKE '%s%%' AND name LIKE '%s%%' AND `storeId` IN (SELECT id FROM `Store` where id LIKE '%s%%' AND name LIKE '%s%%')", managerEmail, managerName, storeId, storeName)).Exec(ctx, &res)
 	if (err != nil) {
-		log.Println("count query failed")
 		return nil, 0, err
 	}
 	totalCount, err := strconv.Atoi(res[0]["COUNT(*)"])
 	if (err != nil) {
-		log.Println("can't convert count")
 		return nil, 0, err
 	}
-	log.Println("Executing find many query")
 	stores, err := basics.PrismaClient.Store.FindMany(
 		db.Store.ID.StartsWith(storeId),
 		db.Store.Name.StartsWith(storeName),
@@ -48,10 +43,6 @@ func (basics *TableBasics) GetStores(ctx context.Context, offset int, limit int,
 		db.UserStore.Email.StartsWith(managerEmail),
 		db.UserStore.Name.StartsWith(managerName),
 	)).Skip(offset).Take(limit).Exec(ctx)
-	if (err != nil) {
-		log.Printf("Get Stores failed: %v ", err.Error())
-	}
-	log.Println("Got Stores")
 	return stores, totalCount, err
 }
 
