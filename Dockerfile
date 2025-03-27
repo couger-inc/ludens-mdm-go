@@ -18,9 +18,7 @@ ARG HANDLER
 COPY ./${BUILD_DIR}/go.mod ./${BUILD_DIR}/
 COPY ./user-console/go.mod ./user-console/
 COPY ./middleware/ ./middleware/
-COPY ./aws/parameter-and-secrets/go.mod ./aws/parameter-and-secrets/
-COPY ./aws/parameter-and-secrets/go.sum ./aws/parameter-and-secrets/
-COPY ./aws/parameter-and-secrets/*.go ./aws/parameter-and-secrets/
+COPY ./aws/parameter-and-secrets/ ./aws/parameter-and-secrets/
 COPY ./openapi/go.mod ./openapi/
 COPY ./openapi/go.sum ./openapi/
 COPY ./openapi/*.go ./openapi/

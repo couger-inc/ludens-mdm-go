@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	parameterandsecrets "github.com/couger-inc/ludens-mdm/aws/parameters-and-secrets"
 	userStore "github.com/couger-inc/ludens-mdm/crud"
 	middleware "github.com/couger-inc/ludens-mdm/middlewares"
 	auth "github.com/couger-inc/ludens-mdm/middlewares/auth"
@@ -19,9 +21,15 @@ func convertRequest(event events.APIGatewayProxyRequest, request *openapi.Delete
 }
 
 func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, int) {
+	ssmsvc := parameterandsecrets.NewSSMClient()
+	result,err := ssmsvc.Param("/ludens-mdm/database_url", true).GetValue()
+   	if err != nil {
+    	return fmt.Sprintf("Unable to fetch param: %v", err.Error()), 500
+   	}
+	log.Println(result)
 	storeId := event.PathParameters["storeId"]
 	var requestBody openapi.DeleteManagersJSONRequestBody
-	err := convertRequest(event, &requestBody)
+	err = convertRequest(event, &requestBody)
 	if (err != nil) {
 		return fmt.Sprintf("Unable to unmarshal request body: %v", err.Error()), 500
 	}
