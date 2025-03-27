@@ -103,4 +103,3 @@ jobs:
         docker push $REGISTRY/$ECR_REPOSITORY:latest
         echo "image=$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
         aws lambda update-function-code --function-name $LAMBDA_FUNCTION_NAME --image-uri $REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-        aws lambda update-function-configuration --function-name $LAMBDA_FUNCTION_NAME --layers arn:aws:lambda:ap-northeast-1:133490724326:layer:AWS-Parameters-and-Secrets-Lambda-Extension:12

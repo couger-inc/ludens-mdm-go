@@ -9,4 +9,5 @@ use (
 	./get-managers-lambda
 	./openapi
 	./middleware
+	./aws/parameter-and-secrets
 )

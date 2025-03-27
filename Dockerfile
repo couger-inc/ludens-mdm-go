@@ -10,8 +10,8 @@ RUN npm install -g @prisma/client
 COPY ./crud ./crud
 
 RUN (cd ./crud && go run github.com/steebchen/prisma-client-go generate)
-WORKDIR /app
 FROM crud AS builder
+WORKDIR /app
 ARG BUILD_DIR
 ARG HANDLER
 # Build with optional lambda.norpc tag
