@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -38,10 +39,11 @@ func convertRequest(event events.APIGatewayProxyRequest, request *openapi.GetMan
 func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, int) {
 	ssmsvc := parameterandsecrets.NewSSMClient()
 	result,err := ssmsvc.Param("/ludens-mdm/database_url", true).GetValue()
-   	if err != nil {
-    	return fmt.Sprintf("Unable to fetch param: %v", err.Error()), 500
-   	}
+	if err != nil {
+		return fmt.Sprintf("Unable to fetch param: %v", err.Error()), 500
+	}
 	log.Println(result)
+	os.Setenv("DATABASE_URL", result)
 	var request openapi.GetManagersAndStoresParams
 	convertRequest(event, &request)
 	skip, err := strconv.Atoi(*request.Offset)
