@@ -18,6 +18,7 @@ ARG HANDLER
 COPY ./${BUILD_DIR}/go.mod ./${BUILD_DIR}/
 COPY ./user-console/go.mod ./user-console/
 COPY ./middleware/ ./middleware/
+COPY ./aws/ ./aws/
 COPY ./openapi/go.mod ./openapi/
 COPY ./openapi/go.sum ./openapi/
 COPY ./openapi/*.go ./openapi/
