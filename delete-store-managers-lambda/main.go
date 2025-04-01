@@ -30,15 +30,13 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, 
 		return fmt.Sprintf("Unable to connect to database: %v", err.Error()), 500
 	}
 	results := []openapi.ManagerObject{}
+	var emails []string
 	for _, manager  := range *requestBody.Managers{
-		createdManager, err := basics.DeleteUserStore(ctx, storeId, manager.Email)
-		if (err != nil) {
-			return fmt.Sprintf("Unable to delete manager: %v", err.Error()), 500
-		}
-		results = append(results, openapi.ManagerObject{
-			Name: createdManager.Name,
-			Email: createdManager.Email,
-		})
+		emails = append(emails, manager.Email)
+	}
+	_, err = basics.DeleteUserStore(ctx, storeId, emails)
+	if (err != nil) {
+		return fmt.Sprintf("Unable to delete users: %v", err.Error()), 500
 	}
 	body := openapi.DeleteManagersResponse{
 		Managers: results,
@@ -53,5 +51,5 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, 
 }
 
 func main() {
-	lambda.Start(middleware.RequestResponseLogger(middleware.APIGatewayProxyResponseMiddleware(middleware.AuthenticateAny(handler, auth.AuthenticateWithCookie, auth.AuthenticateWithToken, auth.AuthenticateWithAccessKey))))
+	lambda.Start(middleware.RequestResponseLogger(middleware.ParamStoreMiddleware(middleware.APIGatewayProxyResponseMiddleware(middleware.AuthenticateAny(handler, auth.AuthenticateWithCookie, auth.AuthenticateWithToken, auth.AuthenticateWithAccessKey)))))
 }

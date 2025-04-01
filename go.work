@@ -3,10 +3,12 @@ go 1.24.0
 use (
 	./crud
 	./user-console
-	./user-store/delete
-	./user-store/get
-	./user-store/put
-	./manager/get
+	./delete-store-managers-lambda
+	./get-store-managers-lambda
+	./put-store-managers-lambda
+	./get-managers-lambda
 	./openapi
 	./middleware
+	./firebase
+	./aws/parameter-and-secrets
 )

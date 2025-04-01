@@ -72,5 +72,5 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, 
 }
 
 func main() {
-	lambda.Start(middleware.RequestResponseLogger(middleware.APIGatewayProxyResponseMiddleware(middleware.AuthenticateAny(handler, auth.AuthenticateWithCookie, auth.AuthenticateWithToken, auth.AuthenticateWithAccessKey))))
+	lambda.Start(middleware.RequestResponseLogger(middleware.ParamStoreMiddleware(middleware.APIGatewayProxyResponseMiddleware(middleware.AuthenticateAny(handler, auth.AuthenticateWithCookie, auth.AuthenticateWithToken, auth.AuthenticateWithAccessKey)))))
 }

@@ -30,6 +30,7 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, 
 	if err != nil {
 		return fmt.Sprintf("Unable to connect to the database: %v", err.Error()), 500
 	}
+	var requests []userStore.Manager
 	results := []openapi.ManagerObject{}
 	for _, manager := range *requestBody.Managers {
 		usersResponse, err := userconsole.GetUsers(manager.Email)
@@ -38,16 +39,12 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, 
 		} else if usersResponse.TotalCount == 0 {
 			return fmt.Sprintf("User: %v not found in ludens user's console", manager.Email), 500
 		} else {
-			createdManager, err := basics.AddUserStore(ctx, storeId, userStore.Manager{Name: manager.Name, Email: manager.Email})
-			if (err == nil) {
-				results = append(results, openapi.ManagerObject{
-					Name: createdManager.Name,
-					Email: createdManager.Email,
-				})
-			} else {
-				return fmt.Sprintf("Unable to create a user: %v", err.Error()), 500
-			}
+			requests = append(requests, userStore.Manager{Name: manager.Name, Email: manager.Email})
 		}
+	}
+	_, err = basics.AddUserStore(ctx, storeId, requests)
+	if err != nil {
+		return fmt.Sprintf("Unable to add users %v", err.Error()), 500
 	}
 	body := openapi.CreateManagersResponse{
 		Managers: results,
@@ -61,5 +58,5 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, 
 }
 
 func main() {
-	lambda.Start(middleware.RequestResponseLogger(middleware.APIGatewayProxyResponseMiddleware(middleware.AuthenticateAny(handler, auth.AuthenticateWithCookie, auth.AuthenticateWithToken, auth.AuthenticateWithAccessKey))))
+	lambda.Start(middleware.RequestResponseLogger(middleware.ParamStoreMiddleware(middleware.APIGatewayProxyResponseMiddleware(middleware.AuthenticateAny(handler, auth.AuthenticateWithCookie, auth.AuthenticateWithToken, auth.AuthenticateWithAccessKey)))))
 }

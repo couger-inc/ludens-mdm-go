@@ -18,8 +18,17 @@ import (
 func convertRequest(event events.APIGatewayProxyRequest, request *openapi.GetManagersAndStoresParams) error {
 	offset := "0"
 	limit := "100"
+	managerEmail := ""
+	managerName := ""
+	storeId := ""
+	storeName := ""
+
 	request.Offset = &offset
 	request.Limit = &limit
+	request.ManagerEmail = &managerEmail
+	request.ManagerName = &managerName
+	request.StoreId = &storeId
+	request.StoreName = &storeName
 	err := mapstructure.Decode(event.QueryStringParameters, &request)
 	return err
 }
@@ -68,5 +77,5 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, 
 }
 
 func main() {
-	lambda.Start(middleware.RequestResponseLogger(middleware.APIGatewayProxyResponseMiddleware(middleware.AuthenticateAny(handler, auth.AuthenticateWithCookie, auth.AuthenticateWithToken, auth.AuthenticateWithAccessKey))))
+	lambda.Start(middleware.RequestResponseLogger(middleware.ParamStoreMiddleware(middleware.APIGatewayProxyResponseMiddleware(middleware.AuthenticateAny(handler, auth.AuthenticateWithCookie, auth.AuthenticateWithToken, auth.AuthenticateWithAccessKey)))))
 }

@@ -62,40 +62,40 @@ func (basics *TableBasics) GetUserStores(ctx context.Context, offset int, limit 
 	return stores, totalCount, err
 }
 
-func (basics *TableBasics) AddUserStore(ctx context.Context, storeId string, manager Manager) (*db.UserStoreModel, error) {
+func (basics *TableBasics) AddUserStore(ctx context.Context, storeId string, managers []Manager) (*db.UserStoreModel, error) {
 	_, err := basics.PrismaClient.Store.FindUnique(db.Store.ID.Equals(storeId)).Exec(ctx)
 	if err != nil && err.Error() == "ErrNotFound" {
 		return nil, fmt.Errorf("store %v not found", storeId)
 	}
-	_, err = basics.PrismaClient.UserStore.FindUnique(db.UserStore.EmailStoreID(db.UserStore.Email.Equals(manager.Email), db.UserStore.StoreID.Equals(storeId))).Exec(ctx)
-	if err == nil || err.Error() != "ErrNotFound" {
-		return nil, fmt.Errorf("manager %v:%v already exists", manager.Email, manager.Name)
+	var txns []db.PrismaTransaction
+	for _, manager := range managers {
+		txn := basics.PrismaClient.UserStore.CreateOne(
+			db.UserStore.Email.Set(manager.Email),
+			db.UserStore.Name.Set(manager.Name),
+			db.UserStore.Store.Link(db.Store.ID.Equals(storeId)),
+		).Tx()
+		txns = append(txns, txn)
 	}
-	createdManager, err :=basics.PrismaClient.UserStore.CreateOne(
-		db.UserStore.Email.Set(manager.Email),
-		db.UserStore.Name.Set(manager.Name),
-		db.UserStore.Store.Link(db.Store.ID.Equals(storeId)),
-	).Exec(ctx)
-	if err != nil {
+	if err := basics.PrismaClient.Prisma.Transaction(txns...).Exec(ctx); err != nil {
 		return nil, err
 	}
-	return createdManager, nil
+	return nil, nil
 }
 
-func (basics *TableBasics) DeleteUserStore(ctx context.Context, storeId string, managerEmail string) (*db.UserStoreModel, error) {
+func (basics *TableBasics) DeleteUserStore(ctx context.Context, storeId string, managerEmails []string) (*db.UserStoreModel, error) {
 	_, err := basics.PrismaClient.Store.FindUnique(db.Store.ID.Equals(storeId)).Exec(ctx)
 	if err != nil && err.Error() == "ErrNotFound" {
 		return nil, fmt.Errorf("store not found: %v", storeId)
 	}
-	_, err = basics.PrismaClient.UserStore.FindUnique(db.UserStore.EmailStoreID(db.UserStore.Email.Equals(managerEmail), db.UserStore.StoreID.Equals(storeId))).Exec(ctx)
-	if err != nil && err.Error() == "ErrNotFound" {
-		return nil, fmt.Errorf("manager, %v, not found for store: %v", managerEmail, storeId)
+	var txns []db.PrismaTransaction
+	for _, managerEmail := range managerEmails {
+		txn := basics.PrismaClient.UserStore.FindUnique(db.UserStore.EmailStoreID(db.UserStore.Email.Equals(managerEmail), db.UserStore.StoreID.Equals(storeId))).Delete().Tx()
+		txns = append(txns, txn)
 	}
-	deletedManager, err := basics.PrismaClient.UserStore.FindUnique(db.UserStore.EmailStoreID(db.UserStore.Email.Equals(managerEmail), db.UserStore.StoreID.Equals(storeId))).Delete().Exec(ctx)
-	if err != nil {
+	if err := basics.PrismaClient.Prisma.Transaction(txns...).Exec(ctx); err != nil {
 		return nil, err
 	}
-	return deletedManager, nil
+	return nil, nil
 }
 
 func (basics *TableBasics) Disconnect() {

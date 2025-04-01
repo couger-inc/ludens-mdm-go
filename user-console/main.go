@@ -9,29 +9,30 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
 func headers() (string, error) {
 	service, serviceExists := os.LookupEnv("SERVICE");
-	// serviceKid, serviceKidExists := os.LookupEnv("SERVICE_KID")
+	serviceKid, serviceKidExists := os.LookupEnv("SERVICE_KID")
 	serviceKey, serviceKeyExists := os.LookupEnv("SERVICE_KEY")
 	issuer := fmt.Sprintf("https://couger.co.jp/service/%v", service)
 	if (!serviceExists) {
 		return "", errors.New("SERVICE is not set")
 	}
-  	// if (!serviceKidExists) {
-		// return "", errors.New("SERVICE_KID is not set")
-	// }
+	if (!serviceKidExists) {
+		return "", errors.New("SERVICE_KID is not set")
+	}
   	if (!serviceKeyExists) {
 		return "", errors.New("SERVICE_KEY is not set")
 	}
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"iat": 1741943467.383,
+		"iat": time.Now().Unix(),
 		"iss": issuer,
 	})
-	t.Header["kid"] = "key-1" // serviceKid
+	t.Header["kid"] = serviceKid
 	s, err := t.SignedString([]byte(serviceKey))
 	return s, err
 }

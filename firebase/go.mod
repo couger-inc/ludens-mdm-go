@@ -1,14 +1,8 @@
-module github.com/couger-inc/ludens-mdm/middlewares/auth
+module github.com/couger-inc/ludens-mdm/firebase
 
 go 1.24.0
 
-require (
-	firebase.google.com/go/v4 v4.15.2
-	github.com/aws/aws-lambda-go v1.47.0
-	github.com/couger-inc/ludens-mdm/crud v0.0.0-00010101000000-000000000000
-	github.com/couger-inc/ludens-mdm/firebase v0.0.0-00010101000000-000000000000
-	github.com/golang-jwt/jwt/v5 v5.2.2
-)
+require firebase.google.com/go/v4 v4.15.2
 
 require (
 	cel.dev/expr v0.16.1 // indirect
@@ -39,11 +33,7 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.4 // indirect
 	github.com/googleapis/gax-go/v2 v2.14.1 // indirect
-	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
-	github.com/shopspring/decimal v1.4.0 // indirect
-	github.com/steebchen/prisma-client-go v0.47.0 // indirect
-	go.mongodb.org/mongo-driver/v2 v2.0.1 // indirect
 	go.opentelemetry.io/contrib/detectors/gcp v1.29.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.54.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.54.0 // indirect
@@ -68,6 +58,4 @@ require (
 	google.golang.org/protobuf v1.36.1 // indirect
 )
 
-replace github.com/couger-inc/ludens-mdm/firebase => ../../firebase
-
-replace github.com/couger-inc/ludens-mdm/crud => ../../crud
+replace github.com/couger-inc/ludens-mdm/aws/parameters-and-secrets => ../aws/parameter-and-secrets
