@@ -38,6 +38,9 @@ func handler(ctx context.Context, event events.APIGatewayProxyRequest) (string, 
 	if (err != nil) {
 		return fmt.Sprintf("Unable to delete users: %v", err.Error()), 500
 	}
+	for _, manager  := range *requestBody.Managers{
+		results = append(results, openapi.ManagerObject{Email: manager.Email, Name: manager.Name})
+	}
 	body := openapi.DeleteManagersResponse{
 		Managers: results,
 	}
