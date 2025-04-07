@@ -1,0 +1,8 @@
+version: '3'
+services:
+  golang:
+    image: golang  # Golangの最新バージョンを使用
+    volumes:
+      - ..:/workspace/golang_backend  # プロジェクトルートをマウント
+    stdin_open: true
+    tty: true
