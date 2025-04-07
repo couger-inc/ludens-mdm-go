@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/couger-inc/ludens-mdm/crud/db"
+	"github.com/couger-inc/ludens-mdm-go/crud/db"
 )
 
 type TableBasics struct{

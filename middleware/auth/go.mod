@@ -1,12 +1,12 @@
-module github.com/couger-inc/ludens-mdm/middlewares/auth
+module github.com/couger-inc/ludens-mdm-go/middlewares/auth
 
 go 1.24.0
 
 require (
 	firebase.google.com/go/v4 v4.15.2
 	github.com/aws/aws-lambda-go v1.47.0
-	github.com/couger-inc/ludens-mdm/crud v0.0.0-00010101000000-000000000000
-	github.com/couger-inc/ludens-mdm/firebase v0.0.0-00010101000000-000000000000
+	github.com/couger-inc/ludens-mdm-go/crud v0.0.0-00010101000000-000000000000
+	github.com/couger-inc/ludens-mdm-go/firebase v0.0.0-00010101000000-000000000000
 	github.com/golang-jwt/jwt/v5 v5.2.2
 )
 
@@ -68,6 +68,6 @@ require (
 	google.golang.org/protobuf v1.36.1 // indirect
 )
 
-replace github.com/couger-inc/ludens-mdm/firebase => ../../firebase
+replace github.com/couger-inc/ludens-mdm-go/crud => ../../crud
 
-replace github.com/couger-inc/ludens-mdm/crud => ../../crud
+replace github.com/couger-inc/ludens-mdm-go/firebase => ../../firebase

@@ -1,11 +1,11 @@
-module github.com/couger-inc/ludens-mdm/middlewares
+module github.com/couger-inc/ludens-mdm-go/middlewares
 
 go 1.24.0
 
 require (
 	github.com/aws/aws-lambda-go v1.47.0
-	github.com/couger-inc/ludens-mdm/aws/parameters-and-secrets v0.0.0-00010101000000-000000000000
-	github.com/couger-inc/ludens-mdm/middlewares/auth v0.0.0-00010101000000-000000000000
+	github.com/couger-inc/ludens-mdm-go/aws/parameters-and-secrets v0.0.0-00010101000000-000000000000
+	github.com/couger-inc/ludens-mdm-go/middlewares/auth v0.0.0-00010101000000-000000000000
 )
 
 require (
@@ -28,8 +28,8 @@ require (
 	github.com/census-instrumentation/opencensus-proto v0.4.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cncf/xds/go v0.0.0-20240905190251-b4127c9b8d78 // indirect
-	github.com/couger-inc/ludens-mdm/crud v0.0.0-00010101000000-000000000000 // indirect
-	github.com/couger-inc/ludens-mdm/firebase v0.0.0-00010101000000-000000000000 // indirect
+	github.com/couger-inc/ludens-mdm-go/crud v0.0.0-00010101000000-000000000000 // indirect
+	github.com/couger-inc/ludens-mdm-go/firebase v0.0.0-00010101000000-000000000000 // indirect
 	github.com/envoyproxy/go-control-plane v0.13.1 // indirect
 	github.com/envoyproxy/protoc-gen-validate v1.1.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
@@ -72,10 +72,10 @@ require (
 	google.golang.org/protobuf v1.36.1 // indirect
 )
 
-replace github.com/couger-inc/ludens-mdm/aws/parameters-and-secrets => ../aws/parameter-and-secrets
+replace github.com/couger-inc/ludens-mdm-go/aws/parameters-and-secrets => ../aws/parameter-and-secrets
 
-replace github.com/couger-inc/ludens-mdm/middlewares/auth => ./auth
+replace github.com/couger-inc/ludens-mdm-go/middlewares/auth => ./auth
 
-replace github.com/couger-inc/ludens-mdm/crud => ../crud
+replace github.com/couger-inc/ludens-mdm-go/crud => ../crud
 
-replace github.com/couger-inc/ludens-mdm/firebase => ../firebase
+replace github.com/couger-inc/ludens-mdm-go/firebase => ../firebase

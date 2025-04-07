@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
-	parameterandsecrets "github.com/couger-inc/ludens-mdm/aws/parameters-and-secrets"
-	"github.com/couger-inc/ludens-mdm/middlewares/auth"
+	parameterandsecrets "github.com/couger-inc/ludens-mdm-go/aws/parameters-and-secrets"
+	"github.com/couger-inc/ludens-mdm-go/middlewares/auth"
 )
 type apiGatewayHandlerFunc func(context.Context, events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 type handlerFunc func(context.Context, events.APIGatewayProxyRequest) (string, int)

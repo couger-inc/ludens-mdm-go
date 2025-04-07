@@ -1,4 +1,4 @@
-module github.com/couger-inc/ludens-mdm/crud
+module github.com/couger-inc/ludens-mdm-go/crud
 
 go 1.24.0
 

@@ -1,4 +1,4 @@
-module github.com/couger-inc/ludens-mdm/aws/parameters-and-secrets
+module github.com/couger-inc/ludens-mdm-go/aws/parameters-and-secrets
 
 go 1.24.0
 

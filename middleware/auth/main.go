@@ -13,9 +13,9 @@ import (
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
 	"github.com/aws/aws-lambda-go/events"
-	userStore "github.com/couger-inc/ludens-mdm/crud"
-	"github.com/couger-inc/ludens-mdm/crud/db"
-	mdm_firebase_credentials "github.com/couger-inc/ludens-mdm/firebase"
+	userStore "github.com/couger-inc/ludens-mdm-go/crud"
+	"github.com/couger-inc/ludens-mdm-go/crud/db"
+	mdm_firebase_credentials "github.com/couger-inc/ludens-mdm-go/firebase"
 	"github.com/golang-jwt/jwt/v5"
 )
 
